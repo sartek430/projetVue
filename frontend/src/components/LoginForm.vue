@@ -37,6 +37,9 @@
 </template>
 
 <script>
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
+
 export default {
   name: "LoginForm",
   data() {
@@ -48,8 +51,13 @@ export default {
   methods: {
     connecter() {
       console.log(this.email);
-      console.log(this.mdp);
+      console.log(bcrypt.hashSync(this.mdp), 10);
     },
+    generateToken(id) {
+      return jwt.sign({ id }, process.env.JWT_SECRET, {
+      expiresIn: '30d',
+      })
+    }
   },
 };
 </script>
