@@ -1,0 +1,21 @@
+@base_url = http://localhost:3000
+{{base_url}}/utilisateurs
+###
+
+POST {{base_url}}/utilisateur
+Content-Type: application/json
+
+{
+    "idutilisateur": 4,
+    "mdp_utilisateur": "1234",
+    "mail_utilisateur": "banane@gmail.com"
+}
+
+###
+{{base_url}}/utilisateurs/1
+
+###
+DELETE {{base_url}}/utilisateur/1
+
+###
+PUT {{base_url}}/utilisateur

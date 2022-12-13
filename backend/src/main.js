@@ -25,34 +25,72 @@ app.get("/utilisateurs", async (req, res) => {
   conn.end();
 });
 
-//get un utilisateur par id passé en paramètre
-app.get("/utilisateur/:id", async (req, res) => {
-  const utilisateur = parseInt(req.params.idutilisateur);
-  const index = utilisateurs.findIndex(
-    (p) => p.idutilisateur === idutilisateur
-  );
-  console.log(utilisateur);
+app.post("/utilisateur", async (req, res) => {
+  const utilisateur = req.body;
   const conn = await pool.getConnection();
   const queryResult = await conn.query(
-    "SELECT idutilisateur, nom_utilisateur, mdp_utilisateur, mail_utilisateur FROM utilisateur where idutilisateur = ?",
-    [utilisateur.idutilisateur]
+    `INSERT INTO utilisateur (idutilisateur, mdp_utilisateur, mail_utilisateur) value (?, ?, ?)`,
+    [
+      utilisateur.idutilisateur,
+      utilisateur.mdp_utilisateur,
+      utilisateur.mail_utilisateur,
+    ]
   );
-  res.json(utilisateur);
-  console.log(queryResult);
+  console.log(queryResult); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
   res.end();
   conn.end();
 });
 
-app.get("/parkings", (req, res) => {
-  res.status(200).json(parkings);
+app.get("/utilisateurs/:idutilisateur", async (req, res) => {
+  const idutilisateur = req.params.idutilisateur;
+  const index = utilisateur.findIndex((p) => p.idutilisateur === idutilisateur);
+  const conn = await pool.getConnection();
+  const queryResult = await conn.query(
+    `select  (idutilisateur, mdp_utilisateur, mail_utilisateur) from utilisateur where idutilisateur = ?`,
+    [index.idutilisateur]
+  );
+
+  res.json(queryResult);
+  res.end();
+  conn.end();
 });
-app.get("/parkings/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const parking = parkings.find((parking) => parking.id === id);
-  res.status(200).json(parking);
+
+app.delete("/utilisateur/:idutilisateur", async (req, res) => {
+  const idutilisateur = req.params.idutilisateur;
+  const index = utilisateur.findIndex((p) => p.idutilisateur === idutilisateur);
+  if (index != -1) {
+    const conn = await pool.getConnection();
+    const queryResult = await conn.query(
+      `delete from utilisateur where idutilisateur = ?`,
+      [utilisateur.idutilisateur]
+    );
+  } else {
+    res.status(400);
+  }
+  conn.end();
+  res.end();
 });
-app.listen(8080, () => {
-  console.log("Serveur à l'écoute");
+
+app.put("/utilisateur", async (req, res) => {
+  const utilisateur = req.body;
+  const index = utilisateur.findIndex(
+    (p) => p.idutilisateur === utilisateur.idutilisateur
+  );
+  if (index != -1) {
+    const conn = await pool.getConnection();
+    const queryResult = await conn.query(
+      `update utilisateur set idutilisateur = ?, mdp_utilisateur = ?, mail_utilisateur = ? where idutilisateur = ? `,
+      [
+        utilisateur.mdp_utilisateur,
+        utilisateur.mail_utilisateur,
+        utilisateur.idutilisateur,
+      ]
+    );
+  } else {
+    res.status(400);
+  }
+  conn.end();
+  res.end();
 });
 
 app.listen(3000);
