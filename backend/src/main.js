@@ -27,7 +27,7 @@ app.get("/utilisateurs", async (req, res) => {
 
 //get un utilisateur par id passé en paramètre
 app.get("/utilisateur/:id", async (req, res) => {
-  const utilisateur = req.params.name;
+  const utilisateur = parseInt(req.params.idutilisateur);
   const index = utilisateurs.findIndex(
     (p) => p.idutilisateur === idutilisateur
   );
@@ -41,6 +41,18 @@ app.get("/utilisateur/:id", async (req, res) => {
   console.log(queryResult);
   res.end();
   conn.end();
+});
+
+app.get("/parkings", (req, res) => {
+  res.status(200).json(parkings);
+});
+app.get("/parkings/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const parking = parkings.find((parking) => parking.id === id);
+  res.status(200).json(parking);
+});
+app.listen(8080, () => {
+  console.log("Serveur à l'écoute");
 });
 
 app.listen(3000);
