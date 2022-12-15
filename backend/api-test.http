@@ -6,16 +6,25 @@ POST {{base_url}}/utilisateur
 Content-Type: application/json
 
 {
-    "idutilisateur": 4,
+    "id_utilisateur": 1,
     "mdp_utilisateur": "1234",
-    "mail_utilisateur": "banane@gmail.com"
+    "mail_utilisateur": "banane@gmail.com",
+    "token_utilisateur": "1123"
 }
 
 ###
-{{base_url}}/utilisateurs/1
+{{base_url}}/utilisateurs/hugo@gmail.com
 
 ###
 DELETE {{base_url}}/utilisateur/1
 
 ###
 PUT {{base_url}}/utilisateur
+Content-Type: application/json
+
+{
+    "id_utilisateur": 2,
+    "mdp_utilisateur": "115652135",
+    "mail_utilisateur": "hugo@gmail.com",
+    "token_utilisateur": "1234"
+}

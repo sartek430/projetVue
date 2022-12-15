@@ -5,9 +5,8 @@ var bodyParser = require("body-parser");
 const pool = mariadb.createPool({
   host: "localhost", //  mettre url de connexion ici
   user: "root",
-  password: "H.v59430",
   database: "projetfsjs",
-  port: 3306,
+  port: 3308,
   connectionLimit: 5,
 });
 
@@ -29,25 +28,24 @@ app.post("/utilisateur", async (req, res) => {
   const utilisateur = req.body;
   const conn = await pool.getConnection();
   const queryResult = await conn.query(
-    `INSERT INTO utilisateur (idutilisateur, mdp_utilisateur, mail_utilisateur) value (?, ?, ?)`,
+    `INSERT INTO utilisateur (id_utilisateur, mdp_utilisateur, mail_utilisateur, token_utilisateur) value (?, ?, ?, ?)`,
     [
-      utilisateur.idutilisateur,
+      utilisateur.id_utilisateur,
       utilisateur.mdp_utilisateur,
       utilisateur.mail_utilisateur,
+      utilisateur.token_utilisateur,
     ]
   );
-  console.log(queryResult); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
   res.end();
   conn.end();
 });
 
-app.get("/utilisateurs/:idutilisateur", async (req, res) => {
-  const idutilisateur = req.params.idutilisateur;
-  const index = utilisateur.findIndex((p) => p.idutilisateur === idutilisateur);
+app.get("/utilisateurs/:mail_utilisateur", async (req, res) => {
+  const mail_utilisateur = req.params.mail_utilisateur;
   const conn = await pool.getConnection();
   const queryResult = await conn.query(
-    `select  (idutilisateur, mdp_utilisateur, mail_utilisateur) from utilisateur where idutilisateur = ?`,
-    [index.idutilisateur]
+    `select * from utilisateur where mail_utilisateur = ?`,
+    [mail_utilisateur]
   );
 
   res.json(queryResult);
@@ -55,41 +53,40 @@ app.get("/utilisateurs/:idutilisateur", async (req, res) => {
   conn.end();
 });
 
-app.delete("/utilisateur/:idutilisateur", async (req, res) => {
-  const idutilisateur = req.params.idutilisateur;
-  const index = utilisateur.findIndex((p) => p.idutilisateur === idutilisateur);
-  if (index != -1) {
+app.delete("/utilisateur/:id_utilisateur", async (req, res) => {
+  const id_utilisateur = req.params.id_utilisateur;
+  if (id_utilisateur != -1) {
     const conn = await pool.getConnection();
     const queryResult = await conn.query(
-      `delete from utilisateur where idutilisateur = ?`,
-      [utilisateur.idutilisateur]
+      `delete from utilisateur where id_utilisateur = ?`,
+      [id_utilisateur]
     );
+    conn.end();
   } else {
     res.status(400);
   }
-  conn.end();
   res.end();
 });
 
 app.put("/utilisateur", async (req, res) => {
   const utilisateur = req.body;
-  const index = utilisateur.findIndex(
-    (p) => p.idutilisateur === utilisateur.idutilisateur
-  );
-  if (index != -1) {
+  if (utilisateur.id_utilisateur != -1) {
     const conn = await pool.getConnection();
     const queryResult = await conn.query(
-      `update utilisateur set idutilisateur = ?, mdp_utilisateur = ?, mail_utilisateur = ? where idutilisateur = ? `,
+      `update utilisateur set id_utilisateur = ?, mdp_utilisateur = ?, mail_utilisateur = ?, token_utilisateur = ? where id_utilisateur = ? `,
       [
+        utilisateur.id_utilisateur,
         utilisateur.mdp_utilisateur,
         utilisateur.mail_utilisateur,
-        utilisateur.idutilisateur,
+        utilisateur.token_utilisateur,
+        utilisateur.id_utilisateur,
       ]
     );
+    conn.end();
   } else {
     res.status(400);
   }
-  conn.end();
+
   res.end();
 });
 

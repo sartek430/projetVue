@@ -1,4 +1,5 @@
 {
+  "proxy": "http://localhost:3000",
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
@@ -9,9 +10,13 @@
   },
   "dependencies": {
     "animate.css": "^4.1.1",
+    "bcryptjs": "^2.4.3",
     "core-js": "^3.8.3",
     "font-awesome": "^4.7.0",
     "jQuery": "^1.7.4",
+    "jsonwebtoken": "^8.5.1",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
   },

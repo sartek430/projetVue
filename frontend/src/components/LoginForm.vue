@@ -32,32 +32,27 @@
 
         <button @click="connecter">Je me connecte</button>
       </form>
+      <div>
+        {{ email }}
+      </div>
     </body>
   </div>
 </template>
 
 <script>
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
-
 export default {
   name: "LoginForm",
   data() {
     return {
-      email: "",
+      email: null,
       mdp: "",
     };
   },
-  methods: {
-    connecter() {
-      console.log(this.email);
-      console.log(bcrypt.hashSync(this.mdp), 10);
-    },
-    generateToken(id) {
-      return jwt.sign({ id }, process.env.JWT_SECRET, {
-      expiresIn: '30d',
-      })
-    }
+
+  connecter() {
+    fetch("/utilisateurs/banane@gmail.com")
+      .then((response) => response.json())
+      .then((data) => (this.email = data.id_utilisateur));
   },
 };
 </script>
